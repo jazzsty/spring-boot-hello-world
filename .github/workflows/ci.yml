@@ -1,18 +1,16 @@
-name: CI
+name: Build and Deploy
 
 on:
   push:
     branches:
       - main
-permissions:
-  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout code
+    - name: Checkout source code
       uses: actions/checkout@v3
 
     - name: Set up JDK 17
@@ -20,8 +18,14 @@ jobs:
       with:
         java-version: '17'
 
-    - name: Build with Gradle
-      run: ./gradlew build --no-daemon
+    - name: Build project
+      run: ./gradlew build
 
     - name: Run tests
       run: ./gradlew test
+
+    - name: Deploy JAR to Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: build/libs
