@@ -45,7 +45,7 @@ jobs:
 
     # 6. 서버에서 애플리케이션 실행
     - name: Restart application on server
-      run: |
+      run:
         ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} \
         "pkill -f 'java -jar' || true && nohup java -jar /var/www/hello-world/HelloWorld-0.0.1-SNAPSHOT.jar > /var/www/hello-world/app.log 2>&1 &"
 
