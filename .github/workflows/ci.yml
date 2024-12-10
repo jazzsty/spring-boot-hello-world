@@ -26,13 +26,28 @@ jobs:
       run: chmod +x ./gradlew  # gradlew에 실행 권한 추가
 
     - name: Build project
-      run: ./gradlew build
+      run: ./gradlew clean build
 
     - name: Run tests
       run: ./gradlew test
 
-    - name: Deploy JAR to Pages
-      uses: peaceiris/actions-gh-pages@v3
+    # 4. SSH 키 설정
+    - name: Setup SSH key
+      uses: webfactory/ssh-agent@v0.8.1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/libs
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    # 5. 배포 디렉토리 생성 및 파일 업로드
+    - name: Deploy JAR to server
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p ${{ secrets.APP_DIR }}"
+        scp build/libs/*.jar ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.APP_DIR }}
+
+    # 6. 서버에서 애플리케이션 실행
+    - name: Restart application on server
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          pkill -f 'java -jar' || true
+          nohup java -jar ${{ secrets.APP_DIR }}/HelloWorld-0.0.1-SNAPSHOT.jar > ${{ secrets.APP_DIR }}/app.log 2>&1 &
+        EOF    
+
