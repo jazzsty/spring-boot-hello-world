@@ -19,6 +19,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'  # 사용할 JDK 배포판 지정 (temurin, zulu 등 중에서 선택)
 
+    - name: Grant execute permission for Gradlew
+      run: chmod +x ./gradlew  # gradlew에 실행 권한 추가
+
     - name: Build project
       run: ./gradlew build
 
