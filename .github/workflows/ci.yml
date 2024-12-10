@@ -46,11 +46,13 @@ jobs:
     # 6. 서버에서 애플리케이션 실행
     - name: Restart application on server
       run:
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} bash << 'EOF'
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
         set -e
+        mkdir -p ${{ secrets.APP_DIR }}
         pkill -f 'java -jar' || true
         nohup java -jar ${{ secrets.APP_DIR }}/HelloWorld-0.0.1-SNAPSHOT.jar > ${{ secrets.APP_DIR }}/app.log 2>&1 &
         EOF
+
 
     
 
