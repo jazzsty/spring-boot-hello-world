@@ -47,7 +47,7 @@ jobs:
     - name: Restart application on server
       run:
         ssh -o StrictHostKeyChecking=no root@${{ secrets.SSH_HOST }} \
-        "pkill -f 'java -jar' || true && nohup java -jar /var/www/hello-world/HelloWorld-0.0.1-SNAPSHOT.jar > /var/www/hello-world/app.log 2>&1 &"
+        "pkill -f 'HelloWorld' || true && nohup java -jar /var/www/hello-world/HelloWorld-0.0.1-SNAPSHOT.jar > /var/www/hello-world/app.log 2>&1 &"
 
 
 
