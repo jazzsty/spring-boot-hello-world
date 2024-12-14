@@ -16,10 +16,10 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v3
 
-    - name: Set up JDK 17
+    - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
-        java-version: '17'
+        java-version: '8'
         distribution: 'temurin'  # 사용할 JDK 배포판 지정 (temurin, zulu 등 중에서 선택)
 
     - name: Grant execute permission for Gradlew
